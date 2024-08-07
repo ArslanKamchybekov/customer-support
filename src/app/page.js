@@ -1,14 +1,16 @@
 'use client';
 
-import { Stack, Box, TextField, Button } from "@mui/material";
+import { Stack, Box, TextField, IconButton, CircularProgress, Typography } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
+import SendIcon from '@mui/icons-material/Send';
 
 export default function Home() {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Welcome to Navability Customer Support! How can I help you today?" },
+    { role: "assistant", content: "Welcome to Navability Customer Support! How can I assist you today?" },
   ]);
 
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const parseBoldText = (text) => {
@@ -70,6 +72,7 @@ export default function Home() {
       height="100vh"
       width="100vw"
       padding={2}
+      bgcolor="#1e1e1e"  // Dark background color
     >
       <Stack
         spacing={2}
@@ -79,6 +82,9 @@ export default function Home() {
         width="500px"
         height="700px"
         border={1}
+        borderRadius={2}
+        boxShadow={3}
+        bgcolor="#2c2c2c"  // Slightly lighter background for the chat container
       >
         <Box
           flexGrow={1}
@@ -87,23 +93,25 @@ export default function Home() {
           display="flex"
           flexDirection="column"
           padding={2}
+          bgcolor="#2c2c2c"
         >
-          {messages.map((message, index) => (
+          {messages.map((msg, index) => (
             <Box
               key={index}
               display="flex"
-              justifyContent={message.role === "assistant" ? "flex-start" : "flex-end"}
+              justifyContent={msg.role === "assistant" ? "flex-start" : "flex-end"}
               width="100%"
-              padding={2}
+              padding={1}
             >
               <Box
-                bgcolor={message.role === "assistant" ? "primary.main" : "secondary.main"}
+                bgcolor={msg.role === "assistant" ? "#00bcd4" : "#424242"}  // Cyan for assistant, dark grey for user
                 color="white"
                 borderRadius={2}
-                padding={2}
+                padding={1.5}
                 maxWidth="75%"
+                boxShadow={2}
               >
-                <div dangerouslySetInnerHTML={{ __html: parseBoldText(message.content) }} />
+                <Typography dangerouslySetInnerHTML={{ __html: parseBoldText(msg.content) }}/>
               </Box>
             </Box>
           ))}
@@ -121,10 +129,23 @@ export default function Home() {
                 sendMessage();
               }
             }}
+            InputProps={{
+              style: {
+                color: 'white', // Text color
+                borderColor: '#424242' // Dark grey border
+              }
+            }}
+            InputLabelProps={{
+              style: { color: '#aaa' } // Light grey label
+            }}
           />
-          <Button variant="contained" color="primary" onClick={sendMessage}>
-            Send
-          </Button>
+          <IconButton
+            color="primary"
+            onClick={sendMessage}
+            disabled={loading}
+          >
+            <SendIcon sx={{ color: '#00bcd4' }} />  {/* Cyan color for send icon */}
+          </IconButton>
         </Stack>
       </Stack>
     </Box>
