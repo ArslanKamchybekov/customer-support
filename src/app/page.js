@@ -1,8 +1,7 @@
 'use client';
 
-import { Stack, Box, TextField, IconButton, CircularProgress, Typography } from "@mui/material";
+import { Stack, Box, TextField, IconButton, CircularProgress, Typography, Button } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
-import SendIcon from '@mui/icons-material/Send';
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -139,13 +138,14 @@ export default function Home() {
               style: { color: '#aaa' } // Light grey label
             }}
           />
-          <IconButton
+         <Button
+            variant="contained"
             color="primary"
             onClick={sendMessage}
-            disabled={loading}
+            sx={{ backgroundColor: '#00bcd4', fontFamily: 'poppins' }}  // Cyan button color
           >
-            <SendIcon sx={{ color: '#00bcd4' }} />  {/* Cyan color for send icon */}
-          </IconButton>
+            Send
+          </Button>
         </Stack>
       </Stack>
     </Box>
