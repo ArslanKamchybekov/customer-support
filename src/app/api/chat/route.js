@@ -48,7 +48,9 @@ User: "Can you explain how the voice assistance feature works?"
 Response: "Certainly! The voice assistance feature provides real-time audio guidance to help you navigate. Simply activate the feature in the app settings, and it will give you step-by-step directions based on your current location. If you have any specific questions or need help setting it up, let me know!"`
  
 export async function POST(req) {
-  const openai = new OpenAI() // Create a new instance of the OpenAI client
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+  })   // Create a new instance of the OpenAI client
   const data = await req.json() // Parse the JSON body of the incoming request
 
   // Create a chat completion request to the OpenAI API

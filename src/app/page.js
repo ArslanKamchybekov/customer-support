@@ -9,7 +9,6 @@ export default function Home() {
   ]);
 
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
   const parseBoldText = (text) => {
