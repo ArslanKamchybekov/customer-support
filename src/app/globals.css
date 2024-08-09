@@ -3,3 +3,51 @@
   padding: 0;
   margin: 0;
 } 
+
+/* Small devices (phones, 0px to 600px) */
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 8px;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 90%;
+  }
+  
+  .button {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
+
+/* Medium devices (tablets, 600px to 900px) */
+@media only screen and (min-width: 600px) and (max-width: 900px) {
+  .container {
+    padding: 12px;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 95%;
+  }
+  
+  .button {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* Large devices (laptops/desktops, 900px and up) */
+@media only screen and (min-width: 900px) {
+  .container {
+    padding: 24px;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-size: 100%;
+  }
+  
+  .button {
+    padding: 14px;
+    font-size: 18px;
+  }
+}

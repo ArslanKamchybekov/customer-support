@@ -1,15 +1,16 @@
 'use client';
 
-import { Stack, Box, TextField, IconButton, CircularProgress, Typography, Button } from "@mui/material";
+import { Stack, Box, TextField, Typography, Button, Rating } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 
 export default function Home() {
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Welcome to Navability Customer Support! How can I assist you today?" },
   ]);
-
   const [message, setMessage] = useState("");
+  const [feedback, setFeedback] = useState(null);
   const messagesEndRef = useRef(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const parseBoldText = (text) => {
     const boldRegex = /\*\*(.*?)\*\*/g;
@@ -24,7 +25,6 @@ export default function Home() {
       { role: 'assistant', content: '' },  // Add a placeholder for the assistant's response
     ])
   
-    // Send the message to the server
     const response = fetch('/api/chat', {
       method: 'POST',
       headers: {
@@ -36,7 +36,6 @@ export default function Home() {
       const decoder = new TextDecoder()  // Create a decoder to decode the response text
   
       let result = ''
-      // Function to process the text from the response
       return reader.read().then(function processText({ done, value }) {
         if (done) {
           return result
@@ -61,6 +60,23 @@ export default function Home() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      setMousePosition({
+        x: event.clientX / window.innerWidth,
+        y: event.clientY / window.innerHeight
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const backgroundStyle = {
+    background: `radial-gradient(circle at ${mousePosition.x * 100}% ${mousePosition.y * 100}%, #1e1e1e, #0d0d0d)`,
+    transition: 'background 0.1s ease'
+  };
+
   return (
     <Box
       display="flex"
@@ -70,19 +86,21 @@ export default function Home() {
       height="100vh"
       width="100vw"
       padding={2}
-      bgcolor="#1e1e1e"  // Dark background color
+      sx={backgroundStyle}
     >
       <Stack
         spacing={2}
         direction="column"
         justifyContent="center"
         alignItems="center"
-        width="500px"
-        height="700px"
-        border={1}
-        borderRadius={2}
-        boxShadow={3}
-        bgcolor="#2c2c2c"  // Slightly lighter background for the chat container
+        sx={{
+          width: { xs: '90%', sm: '75%', md: '50%', lg: '500px' },
+          height: { xs: '80%', md: '700px' },
+          border: 1,
+          borderRadius: 2,
+          boxShadow: 3,
+          bgcolor: "#2c2c2c",
+        }}
       >
         <Box
           flexGrow={1}
@@ -102,7 +120,7 @@ export default function Home() {
               padding={1}
             >
               <Box
-                bgcolor={msg.role === "assistant" ? "#00bcd4" : "#424242"}  // Cyan for assistant, dark grey for user
+                bgcolor={msg.role === "assistant" ? "#00bcd4" : "#424242"}
                 color="white"
                 borderRadius={2}
                 padding={1.5}
@@ -129,24 +147,47 @@ export default function Home() {
             }}
             InputProps={{
               style: {
-                color: 'white', // Text color
-                borderColor: '#424242' // Dark grey border
+                color: 'white',
+                borderColor: '#424242'
               }
             }}
             InputLabelProps={{
-              style: { color: '#aaa' } // Light grey label
+              style: { color: '#aaa' }
             }}
           />
-         <Button
+          <Button
             variant="contained"
             color="primary"
             onClick={sendMessage}
-            sx={{ backgroundColor: '#00bcd4', fontFamily: 'poppins' }}  // Cyan button color
+            sx={{ backgroundColor: '#00bcd4', fontFamily: 'poppins' }}
           >
             Send
           </Button>
         </Stack>
       </Stack>
+
+      {/* Feedback Section */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        width="100%"
+        marginTop={2}
+      >
+        <Typography variant="h6" color="white" sx={{fontFamily: "poppins"}}>Rate Customer Support Help:</Typography>
+        <Rating
+          name="rating"
+          value={feedback}
+          onChange={(_, newValue) => setFeedback(newValue)}
+          sx={{ color: 'cyan' }}
+        />
+        {feedback && (
+          <Typography variant="body2" color="white" my={2}>
+            Thank you for your feedback!
+          </Typography>
+        )}
+      </Box>
     </Box>
   );
 }
